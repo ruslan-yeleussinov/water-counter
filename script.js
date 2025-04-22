@@ -3,228 +3,231 @@ import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 const date = document.querySelector('.title');
 date.innerHTML = dayjs().format('MMMM D');
 
-// Ulpan
+const personOne = "Ulpan";
+const personTwo = "Ruslan";
 
-const addButtonUlpan = document.querySelector('.js-add-button-ulpan');
-const timeListUlpan = document.querySelector('.js-time-list-ulpan');
-const resetButtonUlpan = document.querySelector('.js-reset-button-ulpan');
-const halfButtonUlpan = document.querySelector('.js-half-btn-ulpan');
-const oneButtonUlpan = document.querySelector('.js-one-btn-ulpan');
-const totalWaterUlpan = document.querySelector('.js-ulpan-total');
-const foodButtonUlpan = document.querySelector('.js-food-ulpan');
-const fruitsButtonUlpan = document.querySelector('.js-fruits-ulpan');
+// personOne
+
+const addButtonPersonOne = document.querySelector('.js-add-button-person-1');
+const timeListPersonOne = document.querySelector('.js-time-list-person-1');
+const resetButtonPersonOne = document.querySelector('.js-reset-button-person-1');
+const halfButtonPersonOne = document.querySelector('.js-half-btn-person-1');
+const oneButtonPersonOne = document.querySelector('.js-one-btn-person-1');
+const totalWaterPersonOne = document.querySelector('.js-person-1-total');
+const foodButtonPersonOne = document.querySelector('.js-food-person-1');
+const fruitsButtonPersonOne = document.querySelector('.js-fruits-person-1');
 
 // Function to save times to localStorage
-const saveTimesUlpan = (times) => {
-  localStorage.setItem('timesArrayUlpan', JSON.stringify(times));
+const saveTimesPersonOne = (times) => {
+  localStorage.setItem('timesArrayPersonOne', JSON.stringify(times));
 };
 
 // Function to get times from localStorage
-const getTimesUlpan = () => {
-  const times = localStorage.getItem('timesArrayUlpan');
+const getTimesPersonOne = () => {
+  const times = localStorage.getItem('timesArrayPersonOne');
   return times ? JSON.parse(times) : [];
 };
 
 // Function to render times list
-const renderTimesUlpan = (times) => {
-  timeListUlpan.innerHTML = '';
+const renderTimesPersonOne = (times) => {
+  timeListPersonOne.innerHTML = '';
   times.forEach((time) => {
     const li = document.createElement('li');
     li.textContent = time;
-    timeListUlpan.appendChild(li);
+    timeListPersonOne.appendChild(li);
   });
 };
 
 // Load and render times on page load
-let timesArrayUlpan = getTimesUlpan();
-renderTimesUlpan(timesArrayUlpan);
+let timesArrayPersonOne = getTimesPersonOne();
+renderTimesPersonOne(timesArrayPersonOne);
 
 // Get the total water count from localStorage
-let totalWaterCountUlpan = JSON.parse(localStorage.getItem('totalWaterCountUlpan')) || 0;
-totalWaterUlpan.innerHTML = `Ulpan ${totalWaterCountUlpan}`;
+let totalWaterCountPersonOne = JSON.parse(localStorage.getItem('totalWaterCountPersonOne')) || 0;
+totalWaterPersonOne.innerHTML = `${personOne} ${totalWaterCountPersonOne}`;
 
-function addTotalUlpan(inputValueUlpan) {
-  if (!isNaN(inputValueUlpan) && inputValueUlpan.trim() !== '') {
-    totalWaterCountUlpan += parseFloat(inputValueUlpan);
+function addTotalPersonOne(inputValuePersonOne) {
+  if (!isNaN(inputValuePersonOne) && inputValuePersonOne.trim() !== '') {
+    totalWaterCountPersonOne += parseFloat(inputValuePersonOne);
   } else {
     console.log('Input value is not a number');
   }
-  totalWaterUlpan.innerHTML = `Ulpan ${totalWaterCountUlpan}`;
-  localStorage.setItem('totalWaterCountUlpan', JSON.stringify(totalWaterCountUlpan));
+  totalWaterPersonOne.innerHTML = `${personOne} ${totalWaterCountPersonOne}`;
+  localStorage.setItem('totalWaterCountPersonOne', JSON.stringify(totalWaterCountPersonOne));
 }
 
-addButtonUlpan.addEventListener('click', () => {
-  const inputElementUlpan = document.querySelector('.js-input-ulpan');
-  const inputValueUlpan = inputElementUlpan.value;
+addButtonPersonOne.addEventListener('click', () => {
+  const inputElementPersonOne = document.querySelector('.js-input-person-1');
+  const inputValuePersonOne = inputElementPersonOne.value;
   
-  const currentTimeUlpan = dayjs().format('HH:mm');
-  timesArrayUlpan.push(`${currentTimeUlpan} - ${inputValueUlpan}`);
+  const currentTimePersonOne = dayjs().format('HH:mm');
+  timesArrayPersonOne.push(`${currentTimePersonOne} - ${inputValuePersonOne}`);
 
-  saveTimesUlpan(timesArrayUlpan);
-  renderTimesUlpan(timesArrayUlpan); 
-  addTotalUlpan(inputValueUlpan);
+  saveTimesPersonOne(timesArrayPersonOne);
+  renderTimesPersonOne(timesArrayPersonOne); 
+  addTotalPersonOne(inputValuePersonOne);
 
-  inputElementUlpan.value = '';
+  inputElementPersonOne.value = '';
 });
 
-halfButtonUlpan.addEventListener('click', () => {
-  const halfButtonUlpan = document.querySelector('.js-half-btn-ulpan');
-  const halfGlassUlpan = halfButtonUlpan.innerHTML;
+halfButtonPersonOne.addEventListener('click', () => {
+  const halfButtonPersonOne = document.querySelector('.js-half-btn-person-1');
+  const halfGlassPersonOne = halfButtonPersonOne.innerHTML;
 
-  const currentTimeUlpan = dayjs().format('HH:mm');
-  timesArrayUlpan.push(`${currentTimeUlpan} - 0.5`);
+  const currentTimePersonOne = dayjs().format('HH:mm');
+  timesArrayPersonOne.push(`${currentTimePersonOne} - 0.5`);
   
-  saveTimesUlpan(timesArrayUlpan);
-  renderTimesUlpan(timesArrayUlpan);
-  addTotalUlpan(halfGlassUlpan);
+  saveTimesPersonOne(timesArrayPersonOne);
+  renderTimesPersonOne(timesArrayPersonOne);
+  addTotalPersonOne(halfGlassPersonOne);
 });
 
-oneButtonUlpan.addEventListener('click', () => {
-  const oneButtonUlpan = document.querySelector('.js-one-btn-ulpan');
-  const oneGlassUlpan = oneButtonUlpan.innerHTML;
+oneButtonPersonOne.addEventListener('click', () => {
+  const oneButtonPersonOne = document.querySelector('.js-one-btn-person-1');
+  const oneGlassPersonOne = oneButtonPersonOne.innerHTML;
 
-  const currentTimeUlpan = dayjs().format('HH:mm');
-  timesArrayUlpan.push(`${currentTimeUlpan} - 1`);
+  const currentTimePersonOne = dayjs().format('HH:mm');
+  timesArrayPersonOne.push(`${currentTimePersonOne} - 1`);
   
-  saveTimesUlpan(timesArrayUlpan);
-  renderTimesUlpan(timesArrayUlpan);
-  addTotalUlpan(oneGlassUlpan);
+  saveTimesPersonOne(timesArrayPersonOne);
+  renderTimesPersonOne(timesArrayPersonOne);
+  addTotalPersonOne(oneGlassPersonOne);
 });
 
-foodButtonUlpan.addEventListener('click', () => {
-  const currentTimeUlpan = dayjs().format('HH:mm');
-  timesArrayUlpan.push(`${currentTimeUlpan} - Обед`);
+foodButtonPersonOne.addEventListener('click', () => {
+  const currentTimePersonOne = dayjs().format('HH:mm');
+  timesArrayPersonOne.push(`${currentTimePersonOne} - Обед`);
   
-  saveTimesUlpan(timesArrayUlpan);
-  renderTimesUlpan(timesArrayUlpan);
+  saveTimesPersonOne(timesArrayPersonOne);
+  renderTimesPersonOne(timesArrayPersonOne);
 });
 
-fruitsButtonUlpan.addEventListener('click', () => {
-  const currentTimeUlpan = dayjs().format('HH:mm');
-  timesArrayUlpan.push(`${currentTimeUlpan} - Фрукты`);
+fruitsButtonPersonOne.addEventListener('click', () => {
+  const currentTimePersonOne = dayjs().format('HH:mm');
+  timesArrayPersonOne.push(`${currentTimePersonOne} - Фрукты`);
   
-  saveTimesUlpan(timesArrayUlpan);
-  renderTimesUlpan(timesArrayUlpan);
+  saveTimesPersonOne(timesArrayPersonOne);
+  renderTimesPersonOne(timesArrayPersonOne);
 });
 
-resetButtonUlpan.addEventListener('click', () => {
-  localStorage.removeItem('timesArrayUlpan');
-  localStorage.removeItem('totalWaterCountUlpan');
-  timesArrayUlpan = [];
-  totalWaterCountUlpan = 0;
-  totalWaterUlpan.innerHTML = 'Ulpan 0';
-  renderTimesUlpan(timesArrayUlpan);
+resetButtonPersonOne.addEventListener('click', () => {
+  localStorage.removeItem('timesArrayPersonOne');
+  localStorage.removeItem('totalWaterCountPersonOne');
+  timesArrayPersonOne = [];
+  totalWaterCountPersonOne = 0;
+  totalWaterPersonOne.innerHTML = `${personOne} 0`;
+  renderTimesPersonOne(timesArrayPersonOne);
 });
 
-// Ruslan
+// personTwo
 
-const addButtonRuslan = document.querySelector('.js-add-button-ruslan');
-const timeListRuslan = document.querySelector('.js-time-list-ruslan');
-const resetButtonRuslan = document.querySelector('.js-reset-button-ruslan');
-const halfButtonRuslan = document.querySelector('.js-half-btn-ruslan');
-const oneButtonRuslan = document.querySelector('.js-one-btn-ruslan');
-const totalWaterRuslan = document.querySelector('.js-ruslan-total');
-const foodButtonRuslan = document.querySelector('.js-food-ruslan');
-const fruitsButtonRuslan = document.querySelector('.js-fruits-ruslan');
+const addButtonPersonTwo = document.querySelector('.js-add-button-person-2');
+const timeListPersonTwo = document.querySelector('.js-time-list-person-2');
+const resetButtonPersonTwo = document.querySelector('.js-reset-button-person-2');
+const halfButtonPersonTwo = document.querySelector('.js-half-btn-person-2');
+const oneButtonPersonTwo = document.querySelector('.js-one-btn-person-2');
+const totalWaterPersonTwo = document.querySelector('.js-person-2-total');
+const foodButtonPersonTwo = document.querySelector('.js-food-person-2');
+const fruitsButtonPersonTwo = document.querySelector('.js-fruits-person-2');
 
 // Function to save times to localStorage
-const saveTimesRuslan = (times) => {
-  localStorage.setItem('timesArrayRuslan', JSON.stringify(times));
+const saveTimesPersonTwo = (times) => {
+  localStorage.setItem('timesArrayPersonTwo', JSON.stringify(times));
 };
 
 // Function to get times from localStorage
-const getTimesRuslan = () => {
-  const times = localStorage.getItem('timesArrayRuslan');
+const getTimesPersonTwo = () => {
+  const times = localStorage.getItem('timesArrayPersonTwo');
   return times ? JSON.parse(times) : [];
 };
 
 // Function to render times list
-const renderTimesRuslan = (times) => {
-  timeListRuslan.innerHTML = '';
+const renderTimesPersonTwo = (times) => {
+  timeListPersonTwo.innerHTML = '';
   times.forEach((time) => {
     const li = document.createElement('li');
     li.textContent = time;
-    timeListRuslan.appendChild(li);
+    timeListPersonTwo.appendChild(li);
   });
 };
 
 // Load and render times on page load
-let timesArrayRuslan = getTimesRuslan();
-renderTimesRuslan(timesArrayRuslan);
+let timesArrayPersonTwo = getTimesPersonTwo();
+renderTimesPersonTwo(timesArrayPersonTwo);
 
 // Get the total water count from localStorage
-let totalWaterCountRuslan = JSON.parse(localStorage.getItem('totalWaterCountRuslan')) || 0;
-totalWaterRuslan.innerHTML = `Ruslan ${totalWaterCountRuslan}`;
+let totalWaterCountPersonTwo = JSON.parse(localStorage.getItem('totalWaterCountPersonTwo')) || 0;
+totalWaterPersonTwo.innerHTML = `${personTwo} ${totalWaterCountPersonTwo}`;
 
-function addTotalRuslan(inputValueRuslan) {
-  if (!isNaN(inputValueRuslan) && inputValueRuslan.trim() !== '') {
-    totalWaterCountRuslan += parseFloat(inputValueRuslan);
+function addTotalPersonTwo(inputValuePersonTwo) {
+  if (!isNaN(inputValuePersonTwo) && inputValuePersonTwo.trim() !== '') {
+    totalWaterCountPersonTwo += parseFloat(inputValuePersonTwo);
   } else {
     console.log('Input value is not a number');
   }
-  totalWaterRuslan.innerHTML = `Ruslan ${totalWaterCountRuslan}`;
-  localStorage.setItem('totalWaterCountRuslan', JSON.stringify(totalWaterCountRuslan));
+  totalWaterPersonTwo.innerHTML = `${personTwo} ${totalWaterCountPersonTwo}`;
+  localStorage.setItem('totalWaterCountPersonTwo', JSON.stringify(totalWaterCountPersonTwo));
 }
 
-addButtonRuslan.addEventListener('click', () => {
-  const inputElementRuslan = document.querySelector('.js-input-ruslan');
-  const inputValueRuslan = inputElementRuslan.value;
+addButtonPersonTwo.addEventListener('click', () => {
+  const inputElementPersonTwo = document.querySelector('.js-input-person-2');
+  const inputValuePersonTwo = inputElementPersonTwo.value;
   
-  const currentTimeRuslan = dayjs().format('HH:mm');
-  timesArrayRuslan.push(`${currentTimeRuslan} - ${inputValueRuslan}`);
+  const currentTimePersonTwo = dayjs().format('HH:mm');
+  timesArrayPersonTwo.push(`${currentTimePersonTwo} - ${inputValuePersonTwo}`);
 
-  saveTimesRuslan(timesArrayRuslan);
-  renderTimesRuslan(timesArrayRuslan); 
-  addTotalRuslan(inputValueRuslan);
+  saveTimesPersonTwo(timesArrayPersonTwo);
+  renderTimesPersonTwo(timesArrayPersonTwo); 
+  addTotalPersonTwo(inputValuePersonTwo);
 
-  inputElementRuslan.value = '';
+  inputElementPersonTwo.value = '';
 });
 
-halfButtonRuslan.addEventListener('click', () => {
-  const halfButtonRuslan = document.querySelector('.js-half-btn-ruslan');
-  const halfGlassRuslan = halfButtonRuslan.innerHTML;
+halfButtonPersonTwo.addEventListener('click', () => {
+  const halfButtonPersonTwo = document.querySelector('.js-half-btn-person-2');
+  const halfGlassPersonTwo = halfButtonPersonTwo.innerHTML;
 
-  const currentTimeRuslan = dayjs().format('HH:mm');
-  timesArrayRuslan.push(`${currentTimeRuslan} - 0.5`);
+  const currentTimePersonTwo = dayjs().format('HH:mm');
+  timesArrayPersonTwo.push(`${currentTimePersonTwo} - 0.5`);
   
-  saveTimesRuslan(timesArrayRuslan);
-  renderTimesRuslan(timesArrayRuslan);
-  addTotalRuslan(halfGlassRuslan);
+  saveTimesPersonTwo(timesArrayPersonTwo);
+  renderTimesPersonTwo(timesArrayPersonTwo);
+  addTotalPersonTwo(halfGlassPersonTwo);
 });
 
-oneButtonRuslan.addEventListener('click', () => {
-  const oneButtonRuslan = document.querySelector('.js-one-btn-ruslan');
-  const oneGlassRuslan = oneButtonRuslan.innerHTML;
+oneButtonPersonTwo.addEventListener('click', () => {
+  const oneButtonPersonTwo = document.querySelector('.js-one-btn-person-2');
+  const oneGlassPersonTwo = oneButtonPersonTwo.innerHTML;
 
-  const currentTimeRuslan = dayjs().format('HH:mm');
-  timesArrayRuslan.push(`${currentTimeRuslan} - 1`);
+  const currentTimePersonTwo = dayjs().format('HH:mm');
+  timesArrayPersonTwo.push(`${currentTimePersonTwo} - 1`);
   
-  saveTimesRuslan(timesArrayRuslan);
-  renderTimesRuslan(timesArrayRuslan);
-  addTotalRuslan(oneGlassRuslan);
+  saveTimesPersonTwo(timesArrayPersonTwo);
+  renderTimesPersonTwo(timesArrayPersonTwo);
+  addTotalPersonTwo(oneGlassPersonTwo);
 });
 
-foodButtonRuslan.addEventListener('click', () => {
-  const currentTimeRuslan = dayjs().format('HH:mm');
-  timesArrayRuslan.push(`${currentTimeRuslan} - Обед`);
+foodButtonPersonTwo.addEventListener('click', () => {
+  const currentTimePersonTwo = dayjs().format('HH:mm');
+  timesArrayPersonTwo.push(`${currentTimePersonTwo} - Обед`);
   
-  saveTimesRuslan(timesArrayRuslan);
-  renderTimesRuslan(timesArrayRuslan);
+  saveTimesPersonTwo(timesArrayPersonTwo);
+  renderTimesPersonTwo(timesArrayPersonTwo);
 });
 
-fruitsButtonRuslan.addEventListener('click', () => {
-  const currentTimeRuslan = dayjs().format('HH:mm');
-  timesArrayRuslan.push(`${currentTimeRuslan} - Фрукты`);
+fruitsButtonPersonTwo.addEventListener('click', () => {
+  const currentTimePersonTwo = dayjs().format('HH:mm');
+  timesArrayPersonTwo.push(`${currentTimePersonTwo} - Фрукты`);
   
-  saveTimesRuslan(timesArrayRuslan);
-  renderTimesRuslan(timesArrayRuslan);
+  saveTimesPersonTwo(timesArrayPersonTwo);
+  renderTimesPersonTwo(timesArrayPersonTwo);
 });
 
-resetButtonRuslan.addEventListener('click', () => {
-  localStorage.removeItem('timesArrayRuslan');
-  localStorage.removeItem('totalWaterCountRuslan');
-  timesArrayRuslan = [];
-  totalWaterCountRuslan = 0;
-  totalWaterRuslan.innerHTML = 'Ruslan 0';
-  renderTimesRuslan(timesArrayRuslan);
+resetButtonPersonTwo.addEventListener('click', () => {
+  localStorage.removeItem('timesArrayPersonTwo');
+  localStorage.removeItem('totalWaterCountPersonTwo');
+  timesArrayPersonTwo = [];
+  totalWaterCountPersonTwo = 0;
+  totalWaterPersonTwo.innerHTML = `${personTwo} 0`;
+  renderTimesPersonTwo(timesArrayPersonTwo);
 });
