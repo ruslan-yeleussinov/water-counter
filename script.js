@@ -6,15 +6,15 @@ date.innerHTML = dayjs().format('MMMM D');
 // Universal function for initializing logic for each person
 function initializePerson(personName, selectors) {
   const {
+    totalWater,
+    inputField,
     addButton,
-    timeList,
-    resetButton,
     halfButton,
     oneButton,
-    totalWater,
     foodButton,
     fruitsButton,
-    inputField,
+    timeList,
+    resetButton,
   } = selectors;
 
   const saveTimes = (times) => {
@@ -44,11 +44,24 @@ function initializePerson(personName, selectors) {
   function addTotal(inputValue) {
     if (!isNaN(inputValue) && inputValue.trim() !== '') {
       totalWaterCount += parseFloat(inputValue);
-    } else {
-      console.log('Input value is not a number');
-    }
+    } 
     totalWater.innerHTML = `${personName} ${totalWaterCount}`;
     localStorage.setItem(`totalWaterCount${personName}`, JSON.stringify(totalWaterCount));
+  }
+
+  function getMealTimeLabel(currentTime) {
+    const [hours, minutes] = currentTime.split(':');
+    const totalMinutes = parseInt(hours) * 60 + parseInt(minutes);
+
+    if (totalMinutes >= 0 && totalMinutes < 600) {
+      return 'Breakfast';
+    } else if (totalMinutes >= 600 && totalMinutes < 1020) {
+      return 'Lunch';
+    } else if (totalMinutes >= 1020 && totalMinutes < 1440) {
+      return 'Dinner';
+    } else {
+      return 'Unknown';
+    }
   }
 
   addButton.addEventListener('click', () => {
@@ -83,7 +96,8 @@ function initializePerson(personName, selectors) {
 
   foodButton.addEventListener('click', () => {
     const currentTime = dayjs().format('HH:mm');
-    timesArray.push(`${currentTime} - Обед`);
+    const mealTimeLabel = getMealTimeLabel(currentTime);
+    timesArray.push(`${currentTime} - ${mealTimeLabel}`);
 
     saveTimes(timesArray);
     renderTimes(timesArray);
@@ -91,7 +105,7 @@ function initializePerson(personName, selectors) {
 
   fruitsButton.addEventListener('click', () => {
     const currentTime = dayjs().format('HH:mm');
-    timesArray.push(`${currentTime} - Фрукты`);
+    timesArray.push(`${currentTime} - Fruits`);
 
     saveTimes(timesArray);
     renderTimes(timesArray);
@@ -109,25 +123,25 @@ function initializePerson(personName, selectors) {
 
 // Initialization for each person
 initializePerson('Ulpan', {
+  totalWater: document.querySelector('.js-person-1-total'),
+  inputField: document.querySelector('.js-input-person-1'),
   addButton: document.querySelector('.js-add-button-person-1'),
-  timeList: document.querySelector('.js-time-list-person-1'),
-  resetButton: document.querySelector('.js-reset-button-person-1'),
   halfButton: document.querySelector('.js-half-btn-person-1'),
   oneButton: document.querySelector('.js-one-btn-person-1'),
-  totalWater: document.querySelector('.js-person-1-total'),
   foodButton: document.querySelector('.js-food-person-1'),
   fruitsButton: document.querySelector('.js-fruits-person-1'),
-  inputField: document.querySelector('.js-input-person-1'),
+  timeList: document.querySelector('.js-time-list-person-1'),
+  resetButton: document.querySelector('.js-reset-button-person-1'),
 });
 
 initializePerson('Ruslan', {
-  addButton: document.querySelector('.js-add-button-person-2'),
-  timeList: document.querySelector('.js-time-list-person-2'),
-  resetButton: document.querySelector('.js-reset-button-person-2'),
+  totalWater: document.querySelector('.js-person-2-total'),
+  inputField: document.querySelector('.js-input-person-2'),
+  addButton: document.querySelector('.js-add-button-person-2'), 
   halfButton: document.querySelector('.js-half-btn-person-2'),
   oneButton: document.querySelector('.js-one-btn-person-2'),
-  totalWater: document.querySelector('.js-person-2-total'),
   foodButton: document.querySelector('.js-food-person-2'),
   fruitsButton: document.querySelector('.js-fruits-person-2'),
-  inputField: document.querySelector('.js-input-person-2'),
+  timeList: document.querySelector('.js-time-list-person-2'),
+  resetButton: document.querySelector('.js-reset-button-person-2'),
 });
