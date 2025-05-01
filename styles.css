@@ -8,12 +8,20 @@ body {
   overflow: hidden;
 }
 
-.title {
-  text-align: center;
-  margin: 10px ;
+#date-interval-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
-h2 {
+.date-today,
+.interval {
+  text-align: center;
+  margin: 10px;
+}
+
+.name-total {
   margin-top: 0;
   margin-bottom: 10px;
 }
@@ -50,7 +58,7 @@ h2 {
 }
 
 .btn {
-  width: 70px;
+  width: 85px;
   height: 30px;
   border-radius: 5px;
   border: none;
@@ -73,6 +81,7 @@ p, li {
   height: 55vh;
 }
 
-.half-one {
+.half-one,
+.food-fruits {
   margin: 10px 0;
 }

@@ -1,6 +1,7 @@
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 
-const date = document.querySelector('.title');
+const date = document.querySelector('.date-today');
+const intervalElement = document.querySelector('.interval');
 date.innerHTML = dayjs().format('MMMM D');
 
 // Universal function for initializing logic for each person
@@ -16,6 +17,8 @@ function initializePerson(personName, selectors) {
     timeList,
     resetButton,
   } = selectors;
+
+// Get, display and save the timesList for the current user
 
   const saveTimes = (times) => {
     localStorage.setItem(`timesArray${personName}`, JSON.stringify(times));
@@ -38,15 +41,66 @@ function initializePerson(personName, selectors) {
   let timesArray = getTimes();
   renderTimes(timesArray);
 
-  let totalWaterCount = JSON.parse(localStorage.getItem(`totalWaterCount${personName}`)) || 0;
-  totalWater.innerHTML = `${personName} ${totalWaterCount}`;
+// Get, display and save the interval for the current user
+
+  const saveInterval = (interval) => {
+    localStorage.setItem(`intervalValue${personName}`, JSON.stringify(interval));
+  };
+  
+  const getInterval = () => {
+    const interval = localStorage.getItem(`intervalValue${personName}`);
+    return interval ? JSON.parse(interval) : "";
+  };
+  
+  const renderInterval = (interval) => {
+    intervalElement.innerHTML = interval;
+  };
+  
+  let currentInterval = getInterval();
+  renderInterval(currentInterval); 
+
+  // Get, display and save the total water count for the current user
+
+  const saveTotalWaterCount = (count) => {
+    localStorage.setItem(`totalWaterCount${personName}`, JSON.stringify(count));
+  };
+  
+  const getTotalWaterCount = () => {
+    const count = localStorage.getItem(`totalWaterCount${personName}`);
+    return count ? JSON.parse(count) : 0;
+  };
+  
+  const renderTotalWaterCount = (count) => {
+    totalWater.innerHTML = `${personName} ${count}`;
+  };
+
+  let totalWaterCount = getTotalWaterCount();
+  renderTotalWaterCount(totalWaterCount);
+
+  function calculateInterval() {
+    const currentTime = dayjs().format('HH:mm');
+    const [hours, minutes] = currentTime.split(':');
+    const currentTimeInMinutes = parseInt(hours) * 60 + parseInt(minutes);
+    const currentDayLength = 1440 - currentTimeInMinutes;
+    const intervalInMinutes = Math.floor(currentDayLength / 10);
+    const intervalHours = Math.floor(intervalInMinutes / 60);
+    const intervalMinutes = String(intervalInMinutes % 60).padStart(2, '0');
+    const recommendedInterval = `Interval: ${intervalHours}:${intervalMinutes}`;
+    intervalElement.innerHTML = recommendedInterval;
+    saveInterval(recommendedInterval);
+  }  
 
   function addTotal(inputValue) {
     if (!isNaN(inputValue) && inputValue.trim() !== '') {
       totalWaterCount += parseFloat(inputValue);
-    } 
+    }
+    
+    if (totalWaterCount === 1) {
+      calculateInterval();
+    }
+
     totalWater.innerHTML = `${personName} ${totalWaterCount}`;
-    localStorage.setItem(`totalWaterCount${personName}`, JSON.stringify(totalWaterCount));
+    saveTotalWaterCount(totalWaterCount);
   }
 
   function getMealTimeLabel(currentTime) {
@@ -117,6 +171,7 @@ function initializePerson(personName, selectors) {
     timesArray = [];
     totalWaterCount = 0;
     totalWater.innerHTML = `${personName} 0`;
+    intervalElement.innerHTML = '';
     renderTimes(timesArray);
   });
 }
