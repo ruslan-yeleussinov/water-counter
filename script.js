@@ -1,12 +1,9 @@
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 
-const date = document.querySelector('.date-today');
-const intervalElement = document.querySelector('.interval');
-date.innerHTML = dayjs().format('MMMM D');
-
 // Universal function for initializing logic for each person
 function initializePerson(personName, selectors) {
   const {
+    intervalElement,
     totalWater,
     inputField,
     addButton,
@@ -18,8 +15,7 @@ function initializePerson(personName, selectors) {
     resetButton,
   } = selectors;
 
-// Get, display and save the timesList for the current user
-
+  // === TIMES ===
   const saveTimes = (times) => {
     localStorage.setItem(`timesArray${personName}`, JSON.stringify(times));
   };
@@ -41,35 +37,16 @@ function initializePerson(personName, selectors) {
   let timesArray = getTimes();
   renderTimes(timesArray);
 
-// Get, display and save the interval for the current user
-
-  const saveInterval = (interval) => {
-    localStorage.setItem(`intervalValue${personName}`, JSON.stringify(interval));
-  };
-  
-  const getInterval = () => {
-    const interval = localStorage.getItem(`intervalValue${personName}`);
-    return interval ? JSON.parse(interval) : "";
-  };
-  
-  const renderInterval = (interval) => {
-    intervalElement.innerHTML = interval;
-  };
-  
-  let currentInterval = getInterval();
-  renderInterval(currentInterval); 
-
-  // Get, display and save the total water count for the current user
-
+  // === TOTAL WATER COUNT ===
   const saveTotalWaterCount = (count) => {
     localStorage.setItem(`totalWaterCount${personName}`, JSON.stringify(count));
   };
-  
+
   const getTotalWaterCount = () => {
     const count = localStorage.getItem(`totalWaterCount${personName}`);
     return count ? JSON.parse(count) : 0;
   };
-  
+
   const renderTotalWaterCount = (count) => {
     totalWater.innerHTML = `${personName} ${count}`;
   };
@@ -77,15 +54,37 @@ function initializePerson(personName, selectors) {
   let totalWaterCount = getTotalWaterCount();
   renderTotalWaterCount(totalWaterCount);
 
+  // === INTERVAL ===
+  const saveInterval = (interval) => {
+    localStorage.setItem(`intervalValue${personName}`, JSON.stringify(interval));
+  };
+
+  const getInterval = () => {
+    const interval = localStorage.getItem(`intervalValue${personName}`);
+    return interval ? JSON.parse(interval) : "";
+  };
+
+  const renderInterval = (interval) => {
+    intervalElement.innerHTML = interval;
+  };
+
+  if (totalWaterCount > 0) {
+    const currentInterval = getInterval();
+    renderInterval(currentInterval);
+  } else {
+    renderInterval('');
+  }
+
   function calculateInterval() {
+    const numberOfGlasses = 11;
     const currentTime = dayjs().format('HH:mm');
     const [hours, minutes] = currentTime.split(':');
     const currentTimeInMinutes = parseInt(hours) * 60 + parseInt(minutes);
     const currentDayLength = 1440 - currentTimeInMinutes;
-    const intervalInMinutes = Math.floor(currentDayLength / 10);
+    const intervalInMinutes = Math.floor(currentDayLength / (numberOfGlasses - 1));
     const intervalHours = Math.floor(intervalInMinutes / 60);
     const intervalMinutes = String(intervalInMinutes % 60).padStart(2, '0');
-    const recommendedInterval = `Interval: ${intervalHours}:${intervalMinutes}`;
+    const recommendedInterval = `Interval ${intervalHours}:${intervalMinutes}`;
     intervalElement.innerHTML = recommendedInterval;
     saveInterval(recommendedInterval);
   }  
@@ -178,7 +177,8 @@ function initializePerson(personName, selectors) {
 
 // Initialization for each person
 initializePerson('Ulpan', {
-  totalWater: document.querySelector('.js-person-1-total'),
+  intervalElement: document.querySelector('.js-interval-person-1'),
+  totalWater: document.querySelector('.js-name-total-person-1'),
   inputField: document.querySelector('.js-input-person-1'),
   addButton: document.querySelector('.js-add-button-person-1'),
   halfButton: document.querySelector('.js-half-btn-person-1'),
@@ -190,7 +190,8 @@ initializePerson('Ulpan', {
 });
 
 initializePerson('Ruslan', {
-  totalWater: document.querySelector('.js-person-2-total'),
+  intervalElement: document.querySelector('.js-interval-person-2'),
+  totalWater: document.querySelector('.js-name-total-person-2'),
   inputField: document.querySelector('.js-input-person-2'),
   addButton: document.querySelector('.js-add-button-person-2'), 
   halfButton: document.querySelector('.js-half-btn-person-2'),
