@@ -51,6 +51,12 @@ body {
   padding-left: 0;
 }
 
+.next-glass-time {
+  font-style: italic;
+  color: #929292;
+  margin-top: 6px;
+}
+
 .input {
   width: 60%;
   height: 28px;

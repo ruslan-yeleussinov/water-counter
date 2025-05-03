@@ -1,4 +1,5 @@
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
+const getCurrentTime = () => dayjs().format('HH:mm');
 
 // Universal function for initializing logic for each person
 function initializePerson(personName, selectors) {
@@ -26,13 +27,8 @@ function initializePerson(personName, selectors) {
   };
 
   const renderTimes = (times) => {
-    timeList.innerHTML = '';
-    times.forEach((time) => {
-      const li = document.createElement('li');
-      li.textContent = time;
-      timeList.appendChild(li);
-    });
-  };
+    timeList.innerHTML = times.map(time => `<li>${time}</li>`).join('');
+  };  
 
   let timesArray = getTimes();
   renderTimes(timesArray);
@@ -56,112 +52,119 @@ function initializePerson(personName, selectors) {
 
   // === INTERVAL ===
   const saveInterval = (interval) => {
-    localStorage.setItem(`intervalValue${personName}`, JSON.stringify(interval));
+    localStorage.setItem(`interval${personName}`, JSON.stringify(interval));
   };
 
   const getInterval = () => {
-    const interval = localStorage.getItem(`intervalValue${personName}`);
+    const interval = localStorage.getItem(`interval${personName}`);
     return interval ? JSON.parse(interval) : "";
   };
 
   const renderInterval = (interval) => {
     intervalElement.innerHTML = interval;
   };
-
+  
   if (totalWaterCount > 0) {
-    const currentInterval = getInterval();
-    renderInterval(currentInterval);
+    const interval = getInterval();
+    renderInterval(interval);
   } else {
     renderInterval('');
   }
 
-  function calculateInterval() {
+  function calculateInterval(glassNumber) {
+    const currentTime = getCurrentTime();
     const numberOfGlasses = 11;
-    const currentTime = dayjs().format('HH:mm');
     const [hours, minutes] = currentTime.split(':');
     const currentTimeInMinutes = parseInt(hours) * 60 + parseInt(minutes);
-    const currentDayLength = 1440 - currentTimeInMinutes;
-    const intervalInMinutes = Math.floor(currentDayLength / (numberOfGlasses - 1));
+    const currentDayLengthInMinutes = 1440 - currentTimeInMinutes;
+    const remainingNumOfGlasses = numberOfGlasses - glassNumber;
+
+    const intervalInMinutes = remainingNumOfGlasses >= 2
+      ? Math.round(currentDayLengthInMinutes / remainingNumOfGlasses)
+      : 0;
+
+      if (remainingNumOfGlasses < 0) {
+        alert("You've already drunk your daily water intake!");
+        renderInterval('Over limit!');
+        saveInterval('Over limit!');
+        return;  
+      } else if (remainingNumOfGlasses === 0) {
+        renderInterval('✔ Done for today!');
+        saveInterval('✔ Done for today!');
+        return;
+      } else if (remainingNumOfGlasses < 2 && remainingNumOfGlasses >= 0.1) {
+        renderInterval('Almost...');
+        saveInterval('Almost...');
+        return;
+      }      
+      
     const intervalHours = Math.floor(intervalInMinutes / 60);
     const intervalMinutes = String(intervalInMinutes % 60).padStart(2, '0');
-    const recommendedInterval = `Interval ${intervalHours}:${intervalMinutes}`;
-    intervalElement.innerHTML = recommendedInterval;
-    saveInterval(recommendedInterval);
+    const interval = `Interval ${intervalHours}:${intervalMinutes}`;
+    saveInterval(interval);
+    renderInterval(interval);
+
+    const nextGlassTimeInMinutes = currentTimeInMinutes + intervalInMinutes;
+    const nextGlassHour = String(Math.floor(nextGlassTimeInMinutes / 60)).padStart(2, '0');
+    const nextGlassMinutes = String(nextGlassTimeInMinutes % 60).padStart(2, '0');
+    const nextGlassTime = `${nextGlassHour}:${nextGlassMinutes} - Next glass`;
+    
+    const li = document.createElement('li');
+    li.className = 'next-glass-time';
+    li.textContent = nextGlassTime;
+    timeList.appendChild(li);
   }  
 
   function addTotal(inputValue) {
     if (!isNaN(inputValue) && inputValue.trim() !== '') {
       totalWaterCount += parseFloat(inputValue);
     }
-    
-    if (totalWaterCount === 1) {
-      calculateInterval();
-    }
 
     totalWater.innerHTML = `${personName} ${totalWaterCount}`;
     saveTotalWaterCount(totalWaterCount);
-  }
-
-  function getMealTimeLabel(currentTime) {
-    const [hours, minutes] = currentTime.split(':');
-    const totalMinutes = parseInt(hours) * 60 + parseInt(minutes);
-
-    if (totalMinutes >= 0 && totalMinutes < 600) {
-      return 'Breakfast';
-    } else if (totalMinutes >= 600 && totalMinutes < 1020) {
-      return 'Lunch';
-    } else if (totalMinutes >= 1020 && totalMinutes < 1440) {
-      return 'Dinner';
-    } else {
-      return 'Unknown';
-    }
+    calculateInterval(totalWaterCount);
   }
 
   addButton.addEventListener('click', () => {
+    const currentTime = getCurrentTime();
     const inputValue = inputField.value;
-    const currentTime = dayjs().format('HH:mm');
     timesArray.push(`${currentTime} - ${inputValue}`);
-
     saveTimes(timesArray);
     renderTimes(timesArray);
     addTotal(inputValue);
-
     inputField.value = '';
   });
 
   halfButton.addEventListener('click', () => {
-    const currentTime = dayjs().format('HH:mm');
+    const currentTime = getCurrentTime();
     timesArray.push(`${currentTime} - 0.5`);
-
     saveTimes(timesArray);
     renderTimes(timesArray);
     addTotal('0.5');
   });
 
   oneButton.addEventListener('click', () => {
-    const currentTime = dayjs().format('HH:mm');
+    const currentTime = getCurrentTime();
     timesArray.push(`${currentTime} - 1`);
-
     saveTimes(timesArray);
     renderTimes(timesArray);
     addTotal('1');
   });
 
   foodButton.addEventListener('click', () => {
-    const currentTime = dayjs().format('HH:mm');
-    const mealTimeLabel = getMealTimeLabel(currentTime);
-    timesArray.push(`${currentTime} - ${mealTimeLabel}`);
-
+    const currentTime = getCurrentTime();
+    timesArray.push(`${currentTime} - Food`);
     saveTimes(timesArray);
     renderTimes(timesArray);
+    calculateInterval(totalWaterCount);
   });
 
   fruitsButton.addEventListener('click', () => {
-    const currentTime = dayjs().format('HH:mm');
+    const currentTime = getCurrentTime();
     timesArray.push(`${currentTime} - Fruits`);
-
     saveTimes(timesArray);
     renderTimes(timesArray);
+    calculateInterval(totalWaterCount);
   });
 
   resetButton.addEventListener('click', () => {
@@ -170,7 +173,7 @@ function initializePerson(personName, selectors) {
     timesArray = [];
     totalWaterCount = 0;
     totalWater.innerHTML = `${personName} 0`;
-    intervalElement.innerHTML = '';
+    renderInterval('');
     renderTimes(timesArray);
   });
 }
